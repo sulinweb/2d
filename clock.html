@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>clock</title>
+</head>
+<style>
+    .clock{
+        width:200px;
+        height:200px;
+        overflow:hidden;
+        border:5px solid #d3d3d3;
+        border-radius: 50%;
+        /*background:radial-gradient(#fff,#ccc);*/
+        background:url(timg.jpg) no-repeat 0 0;
+        background-size:cover;
+        box-shadow: 0 0 5px #fff;
+        margin:auto;
+        position:fixed;
+        left:0;top:0;right:0;bottom:0;
+    }
+</style>
+<body>
+<div class="clock"></div>
+</body>
+<script>
+    window.onload=function(){
+        var clock=document.querySelector(".clock");
+        //创建刻度
+        createMark();
+        function createMark(){
+            for(var i=0;i<60;i++){
+                var widths,heights;
+                if(i%5==0){
+                    widths=6;
+                    heights=8;
+                }else{
+                    widths=2;
+                    heights=4;
+                }
+                var box=document.createElement("div");
+                box.style.cssText="width:"+widths+"px;height:"+heights+"px;background:#000;position:absolute;left:"+(200-widths)/2+"px;top:0px;";
+                box.style.transformOrigin="center 100px";
+                box.style.transform="rotate("+i*6+"deg)";
+                clock.appendChild(box);
+            }
+        }
+        //创建时针、分针、秒针
+        var times=new Date();
+        var hours=times.getHours();
+        var min=times.getMinutes();
+        var second=times.getSeconds();
+
+        var h=createPointer(4,45,"#000",hours*30+min*6/12);
+        var m=createPointer(3,60,"#000",min*6);
+        var s=createPointer(2,80,"#000",second*6);
+
+        setInterval(function(){
+            var times=new Date();
+            var hours=times.getHours();
+            var min=times.getMinutes();
+            var second=times.getSeconds();
+
+            h.style.transform="rotate("+(hours*6+min*6/12)+"deg)";
+            m.style.transform="rotate("+min*6+"deg)";
+            s.style.transform="rotate("+second*6+"deg)";
+        },1000);
+
+        function createPointer(w,h,c,a){
+            var box1=document.createElement("div");
+            var lefts=(200-w)/2;
+            var tops=200/2-h+10;
+            box1.style.cssText="width:"+w+"px;height:"+h+"px;background:#000;position:absolute;left:"+lefts+"px;top:"+tops+"px;";
+            box1.style.transformOrigin="center "+(h-10)+"px";
+            box1.style.transform="rotate("+a+"deg)";
+            clock.appendChild(box1);
+            return box1;
+        }
+
+    }
+</script>
+</html>
